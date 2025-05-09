@@ -1,0 +1,1 @@
+Placeholder content. Rebuild project structure if necessary.

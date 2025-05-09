@@ -1,0 +1,18 @@
+{
+  "basic_information": {
+    "name": "Ava",
+    "age": "29"
+  },
+  "professional_profile": {
+    "primary_occupation": "AI researcher"
+  },
+  "personal_background": {
+    "description": "Ava has a curious mind and a passion for exploring the boundaries of machine intelligence."
+  },
+  "personality_traits": [
+    "intelligent",
+    "curious",
+    "friendly",
+    "helpful"
+  ]
+}
