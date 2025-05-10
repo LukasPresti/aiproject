@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatGroq } from "@langchain/groq";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, '.env') });
-console.log("Loaded API KEY:", process.env.OPENAI_API_KEY);
+console.log("Loaded GROQ KEY:", process.env.GROQ_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,26 +43,22 @@ app.post('/chat', async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders();
 
-    console.log("Using API Key:", process.env.OPENAI_API_KEY);
-    console.log("Using Org ID:", process.env.OPENAI_ORG_ID);
-    
-    const llm = new ChatOpenAI({
-        modelName: 'gpt-3.5-turbo',
+    const llm = new ChatGroq({
+        apiKey: process.env.GROQ_API_KEY,
+        model: "llama3-8b-8192", // or "llama3-70b-8192", "mixtral-8x7b-32768"
         temperature: 0.7,
         streaming: true,
-        openAIApiKey: process.env.OPENAI_API_KEY,
-        configuration: {
-            organization: process.env.OPENAI_ORG_ID
-        },
-        callbacks: [{
-            handleLLMNewToken(token) {
-                res.write(`data: ${token}\n\n`);
-            },
-            handleLLMEnd() {
-                res.write('data: [DONE]\n\n');
-                res.end();
+        callbacks: [
+            {
+                handleLLMNewToken(token) {
+                    res.write(`data: ${token}\n\n`);
+                },
+                handleLLMEnd() {
+                    res.write("data: [DONE]\n\n");
+                    res.end();
+                }
             }
-        }]
+        ]
     });
 
     try {

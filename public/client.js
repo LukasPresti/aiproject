@@ -26,7 +26,7 @@ document.getElementById("chat-form").addEventListener("submit", async function (
     const lines = chunk.split("\n\n");
     for (const line of lines) {
       if (line.startsWith("data: ")) {
-        const data = line.replace("data: ", "").trim();
+        const data = line.replace("data: ", "");
         if (data === "[DONE]") {
           chatbox.innerHTML += `<div class='bot'><strong>Ava:</strong> ${botMessage}</div>`;
           return;
